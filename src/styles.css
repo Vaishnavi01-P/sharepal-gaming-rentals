@@ -80,6 +80,15 @@ header {
   gap: 28px;
 }
 
+.logo-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
 .logo {
   font-family: Manrope, sans-serif;
   font-weight: 800;
@@ -305,7 +314,7 @@ nav a.active {
   margin: auto;
   padding: 0 24px;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -314,13 +323,16 @@ nav a.active {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 10px 16px;
+  padding: 12px 18px;
   font-size: 13px;
   font-weight: 600;
   color: #666;
+  background: transparent;
+  border: 0;
   border-bottom: 2px solid transparent;
   transition: all 0.15s ease;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .main-cat-item:hover {
@@ -853,6 +865,107 @@ nav a.active {
 
 .sold {
   opacity: 0.9;
+}
+
+/* Category Showcase Box for Non-Gaming Departments */
+.other-cat-listing {
+  padding: 20px 0;
+}
+
+.category-showcase-box {
+  background: #fbf9f6;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 45px 30px;
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.showcase-icon {
+  font-size: 42px;
+  margin-bottom: 12px;
+}
+
+.category-showcase-box h2 {
+  font-family: Manrope, sans-serif;
+  font-size: 24px;
+  margin: 0 0 10px;
+}
+
+.category-showcase-box p {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 580px;
+  margin: 0 auto 20px;
+}
+
+.cat-feature-pills {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.feature-pill {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+}
+
+.cat-cta-group {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 24px;
+  font-size: 14px;
+  background: var(--purple);
+}
+
+.btn-large:hover {
+  opacity: 0.92;
+}
+
+/* Mobile Category List */
+.mobile-category-list {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile-cat-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.mobile-cat-buttons button {
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.mobile-cat-buttons button.active {
+  background: var(--purple);
+  color: #fff;
+  border-color: var(--purple);
 }
 
 /* Sections */
@@ -1473,8 +1586,8 @@ footer {
 }
 
 .mobile-city-selector {
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -1508,7 +1621,7 @@ footer {
 }
 
 .mobile-nav-links a {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--ink);
 }
@@ -1689,7 +1802,7 @@ footer {
   .search {
     min-width: 140px;
   }
-  .nav .logo {
+  .logo {
     font-size: 24px;
   }
 }
