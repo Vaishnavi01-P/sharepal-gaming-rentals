@@ -25,7 +25,12 @@ import {
   Sparkles,
   Zap,
   PackageCheck,
-  ArrowRight
+  ArrowRight,
+  Coins,
+  ShieldAlert,
+  Percent,
+  BadgeCheck,
+  ShoppingBag
 } from 'lucide-react';
 import './styles.css';
 import raw from '../public-product-list.json';
@@ -143,10 +148,24 @@ function Header({
   selectedDates,
   onOpenDates,
   mainCategory,
-  setMainCategory
+  setMainCategory,
+  activeNav,
+  setActiveNav
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
+
+  const handleNavClick = (navId) => {
+    setActiveNav(navId);
+    if (navId === 'why-sharepal') {
+      const el = document.getElementById('why-sharepal');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <>
@@ -168,7 +187,7 @@ function Header({
             <Menu size={22} />
           </button>
 
-          <button className="logo-btn" onClick={() => setMainCategory('Gaming')}>
+          <button className="logo-btn" onClick={() => handleNavClick('rent')}>
             <span className="logo">
               share<span>pal</span>
             </span>
@@ -220,10 +239,30 @@ function Header({
           </div>
 
           <nav>
-            <a href="#rent" className="active">Rent</a>
-            <a href="#buy">Buy</a>
-            <a href="#why-sharepal">Why SharePal</a>
-            <a href="#earn">Earn With Us</a>
+            <button
+              className={'nav-link-btn ' + (activeNav === 'rent' ? 'active' : '')}
+              onClick={() => handleNavClick('rent')}
+            >
+              Rent
+            </button>
+            <button
+              className={'nav-link-btn ' + (activeNav === 'buy' ? 'active' : '')}
+              onClick={() => handleNavClick('buy')}
+            >
+              Buy
+            </button>
+            <button
+              className={'nav-link-btn ' + (activeNav === 'why-sharepal' ? 'active' : '')}
+              onClick={() => handleNavClick('why-sharepal')}
+            >
+              Why SharePal
+            </button>
+            <button
+              className={'nav-link-btn ' + (activeNav === 'earn' ? 'active' : '')}
+              onClick={() => handleNavClick('earn')}
+            >
+              Earn With Us
+            </button>
           </nav>
 
           <div className="nav-actions">
@@ -238,26 +277,28 @@ function Header({
           </div>
         </div>
 
-        {/* Main Category Tabs Bar */}
-        <div className="main-cat-bar">
-          <div className="main-cat-inner">
-            {mainCategories.map((cat) => {
-              const Icon = cat.icon;
-              const isActive = mainCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setMainCategory(cat.id)}
-                  className={'main-cat-item ' + (isActive ? 'active' : '')}
-                >
-                  <Icon size={16} />
-                  <span>{cat.name}</span>
-                </button>
-              );
-            })}
+        {/* Main Category Tabs Bar (Visible when in Rent mode) */}
+        {activeNav === 'rent' && (
+          <div className="main-cat-bar">
+            <div className="main-cat-inner">
+              {mainCategories.map((cat) => {
+                const Icon = cat.icon;
+                const isActive = mainCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setMainCategory(cat.id)}
+                    className={'main-cat-item ' + (isActive ? 'active' : '')}
+                  >
+                    <Icon size={16} />
+                    <span>{cat.name}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </header>
 
       {/* Mobile Menu Drawer */}
@@ -291,29 +332,43 @@ function Header({
               </div>
             </div>
 
-            <div className="mobile-category-list">
-              <span className="eyebrow">CATEGORIES</span>
-              <div className="mobile-cat-buttons">
-                {mainCategories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    className={mainCategory === cat.id ? 'active' : ''}
-                    onClick={() => {
-                      setMainCategory(cat.id);
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    {cat.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="mobile-nav-links">
-              <a href="#rent" onClick={() => setMobileMenuOpen(false)}>Rent Gear</a>
-              <a href="#buy" onClick={() => setMobileMenuOpen(false)}>Buy Refurbished</a>
-              <a href="#why-sharepal" onClick={() => setMobileMenuOpen(false)}>Why SharePal</a>
-              <a href="#earn" onClick={() => setMobileMenuOpen(false)}>Earn With Us</a>
+              <button
+                className={'mobile-nav-btn ' + (activeNav === 'rent' ? 'active' : '')}
+                onClick={() => {
+                  handleNavClick('rent');
+                  setMobileMenuOpen(false);
+                }}
+              >
+                🎮 Rent Gaming & Gadgets
+              </button>
+              <button
+                className={'mobile-nav-btn ' + (activeNav === 'buy' ? 'active' : '')}
+                onClick={() => {
+                  handleNavClick('buy');
+                  setMobileMenuOpen(false);
+                }}
+              >
+                🛍️ Buy Certified Refurbished
+              </button>
+              <button
+                className={'mobile-nav-btn ' + (activeNav === 'why-sharepal' ? 'active' : '')}
+                onClick={() => {
+                  handleNavClick('why-sharepal');
+                  setMobileMenuOpen(false);
+                }}
+              >
+                🛡️ Why SharePal Promise
+              </button>
+              <button
+                className={'mobile-nav-btn ' + (activeNav === 'earn' ? 'active' : '')}
+                onClick={() => {
+                  handleNavClick('earn');
+                  setMobileMenuOpen(false);
+                }}
+              >
+                💰 Earn With Us
+              </button>
             </div>
 
             <button className="primary full" onClick={() => setMobileMenuOpen(false)}>
@@ -537,6 +592,162 @@ function QuickViewModal({ product, close, onAdd }) {
   );
 }
 
+function BuySection({ onSwitchToRent }) {
+  const buyItems = [
+    {
+      name: 'PS5 Digital Edition (Certified Refurbished)',
+      price: '₹34,999',
+      original: '₹44,990',
+      tag: '6 Months Warranty',
+      image: 'https://images.sharepal.in/categories/gaming-consoles/ps5/ps5-with-1-controller/ps5-console-with-1-controller-on-rent-sharepal-1.webp'
+    },
+    {
+      name: 'PS5 Disc Console + 2 DualSense Controllers',
+      price: '₹42,499',
+      original: '₹54,990',
+      tag: 'Tested 100% Quality',
+      image: 'https://images.sharepal.in/categories/gaming-consoles/ps5/ps5-with-2%20controllers/ps5-console-with-2-controllers-on-rent-sharepal-1.webp'
+    },
+    {
+      name: 'DualSense Wireless Controller (Midnight Black)',
+      price: '₹3,999',
+      original: '₹5,990',
+      tag: 'Certified Pre-Owned',
+      image: 'https://images.sharepal.in/categories/gaming-consoles/ps5/ps5-fifa26-2-controllers/ps5-with-fifa-26-with-2-controllers-on-rent-sharepal-1.webp'
+    }
+  ];
+
+  return (
+    <section className="section buy-page-section">
+      <div className="hero buy-hero">
+        <div className="hero-content">
+          <span className="hero-eyebrow">SHAREPAL REFURBISHED STORE</span>
+          <h1>Buy Certified Pre-Owned Gaming Gear</h1>
+          <p>Thoroughly inspected, cleaned, and verified with up to 6 months warranty and 7-day hassle-free return.</p>
+          <div className="hero-highlights">
+            <span className="pill"><BadgeCheck size={14} /> 12-Point Quality Inspected</span>
+            <span className="pill"><ShieldCheck size={14} /> 6-Month Warranty</span>
+            <span className="pill"><Zap size={14} /> Free Express Delivery</span>
+          </div>
+        </div>
+        <div className="hero-badge buy-badge">
+          <div>🏷️</div>
+          <b>Save up to 40%</b>
+          <span>vs New MRP</span>
+        </div>
+      </div>
+
+      <div className="listing-head">
+        <div>
+          <span className="eyebrow">PRE-OWNED DEALS</span>
+          <h2>Popular Refurbished Gadgets</h2>
+          <p>All items checked by certified hardware specialists</p>
+        </div>
+      </div>
+
+      <div className="grid">
+        {buyItems.map((item, idx) => (
+          <article className="card" key={idx}>
+            <div className="image-box">
+              <span className="tag trending">{item.tag}</span>
+              <img src={item.image} alt={item.name} />
+            </div>
+            <div className="card-body">
+              <div className="rating">
+                <span><Star size={13} fill="currentColor" /> 4.9</span>
+                <small>Certified</small>
+              </div>
+              <h3>{item.name}</h3>
+              <p className="desc">Includes all original accessories & power kit</p>
+              <div className="price-row">
+                <div>
+                  <small style={{ textDecoration: 'line-through', color: '#999' }}>MRP {item.original}</small>
+                  <strong>{item.price}</strong>
+                </div>
+                <span className="guarantee-badge">In Stock</span>
+              </div>
+              <button
+                className="add"
+                onClick={() => alert(`Order initiated for ${item.name}! A SharePal specialist will contact you.`)}
+              >
+                Buy Now
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="buy-switch-banner">
+        <div>
+          <h3>Rather try before buying?</h3>
+          <p>Rent any gaming console or accessory starting at just ₹160/day.</p>
+        </div>
+        <button className="primary btn-large" onClick={onSwitchToRent}>
+          Browse Rentals Catalog <ArrowRight size={16} />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function EarnSection({ onSwitchToRent }) {
+  return (
+    <section className="section earn-page-section">
+      <div className="hero earn-hero">
+        <div className="hero-content">
+          <span className="hero-eyebrow">MONETIZE WITH SHAREPAL</span>
+          <h1>Earn Monthly Income by Renting Your Idle Gear</h1>
+          <p>Put your gaming consoles, action cameras, projectors, or trekking kits to work. We manage delivery, pickup, KYC, and security.</p>
+          <div className="hero-highlights">
+            <span className="pill"><Coins size={14} /> Up to ₹15,000/mo</span>
+            <span className="pill"><ShieldAlert size={14} /> Full Damage Protection</span>
+            <span className="pill"><Percent size={14} /> Transparent 80/20 Payout</span>
+          </div>
+        </div>
+        <div className="hero-badge earn-badge">
+          <div>💰</div>
+          <b>Zero Hassle</b>
+          <span>Monthly Payouts</span>
+        </div>
+      </div>
+
+      <div className="earn-steps-grid">
+        <div className="earn-step-card">
+          <div className="step-num">1</div>
+          <h3>List Your Gadget</h3>
+          <p>Submit your product details, photos, and current condition in under 2 minutes.</p>
+        </div>
+        <div className="earn-step-card">
+          <div className="step-num">2</div>
+          <h3>We Inspect & Pick Up</h3>
+          <p>SharePal verifies the device, creates a high-res listing, and delivers it to verified renters.</p>
+        </div>
+        <div className="earn-step-card">
+          <div className="step-num">3</div>
+          <h3>Earn Direct to Bank</h3>
+          <p>Receive your rental earnings directly in your bank account every single month.</p>
+        </div>
+      </div>
+
+      <div className="earn-cta-card">
+        <h2>Ready to start earning from your gaming setup?</h2>
+        <p>Join over 3,500+ gadget hosts across Bangalore, Mumbai, and Delhi.</p>
+        <div className="cat-cta-group" style={{ marginTop: '16px', gap: '12px' }}>
+          <button
+            className="primary btn-large"
+            onClick={() => alert('Host registration opened! Our partner success team will reach out via WhatsApp/Phone.')}
+          >
+            List Your Gadget Now
+          </button>
+          <button className="filter btn-large" onClick={onSwitchToRent}>
+            Explore Rentals First
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FAQ() {
   const [open, setOpen] = useState(null);
   return (
@@ -652,7 +863,7 @@ function Testimonials() {
   );
 }
 
-function Footer({ onSelectCategory }) {
+function Footer({ onSelectCategory, onSelectNav }) {
   return (
     <footer>
       <div className="footer-top">
@@ -685,12 +896,12 @@ function Footer({ onSelectCategory }) {
           <a href="#entertainment" onClick={() => onSelectCategory('Entertainment')}>Projectors & Screens</a>
         </div>
         <div>
-          <h4>Company</h4>
-          <a href="#">About Us</a>
-          <a href="#">Why SharePal</a>
-          <a href="#">Contact Us</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Privacy Policy</a>
+          <h4>Company & Services</h4>
+          <a href="#rent" onClick={() => onSelectNav('rent')}>Rent Gadgets</a>
+          <a href="#buy" onClick={() => onSelectNav('buy')}>Buy Refurbished</a>
+          <a href="#why-sharepal" onClick={() => onSelectNav('why-sharepal')}>Why SharePal</a>
+          <a href="#earn" onClick={() => onSelectNav('earn')}>Earn With Us</a>
+          <a href="#terms">Terms of Use & Privacy</a>
         </div>
       </div>
       <div className="footer-bottom">
@@ -759,6 +970,7 @@ function Cart({ items, onRemove, close }) {
 }
 
 function App() {
+  const [activeNav, setActiveNav] = useState('rent');
   const [mainCategory, setMainCategory] = useState('Gaming');
   const [subTab, setSubTab] = useState('All');
   const [datesModalOpen, setDatesModalOpen] = useState(false);
@@ -774,7 +986,6 @@ function App() {
   const currentCatMeta = categoryInfo[mainCategory] || categoryInfo.Gaming;
 
   const filtered = useMemo(() => {
-    // If on Gaming category, filter the supplied products dataset
     if (mainCategory === 'Gaming') {
       let result = products.filter((p) => {
         if (search && !p.name.toLowerCase().includes(search.toLowerCase())) {
@@ -796,8 +1007,6 @@ function App() {
       if (sort === 'popular') cloned.sort((x, y) => (y.booked_count || 0) - (x.booked_count || 0));
       return cloned;
     }
-
-    // For other categories, filter based on search if needed
     return [];
   }, [mainCategory, subTab, sort, search]);
 
@@ -811,6 +1020,7 @@ function App() {
   };
 
   const focusSearch = () => {
+    if (activeNav !== 'rent') setActiveNav('rent');
     const input = document.getElementById('search-input');
     if (input) {
       input.focus();
@@ -819,6 +1029,7 @@ function App() {
   };
 
   const switchMainCategory = (cat) => {
+    setActiveNav('rent');
     setMainCategory(cat);
     setSubTab('All');
     setSearch('');
@@ -836,143 +1047,153 @@ function App() {
         onOpenDates={() => setDatesModalOpen(true)}
         mainCategory={mainCategory}
         setMainCategory={switchMainCategory}
+        activeNav={activeNav}
+        setActiveNav={setActiveNav}
       />
 
       <main id="rent">
-        <DateBar
-          onOpenModal={() => setDatesModalOpen(true)}
-          selectedDates={{ start: startDate, end: endDate }}
-        />
-
-        {/* Dynamic Hero Section according to selected category */}
-        <section className="hero">
-          <div className="hero-content">
-            <span className="hero-eyebrow">{currentCatMeta.eyebrow}</span>
-            <h1>{currentCatMeta.title} in {selectedCity}</h1>
-            <p>{currentCatMeta.description}</p>
-            <div className="hero-highlights">
-              {currentCatMeta.highlights.map((h) => (
-                <span key={h} className="pill">
-                  <Sparkles size={13} /> {h}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="hero-badge">
-            <div>{currentCatMeta.badgeIcon}</div>
-            <b>{currentCatMeta.badgeText}</b>
-            <span>{currentCatMeta.badgeSub}</span>
-          </div>
-        </section>
-
-        {/* Subcategory Filter Tabs */}
-        <CategoryTabs
-          tabsList={currentCatMeta.tabs}
-          active={subTab}
-          setActive={setSubTab}
-        />
-
-        {/* Catalog Section */}
-        {mainCategory === 'Gaming' ? (
-          <section className="listing">
-            <div className="listing-head">
-              <div>
-                <span className="eyebrow">{selectedCity.toUpperCase()} GAMING CATALOG</span>
-                <h2>Gaming gadgets on rent</h2>
-                <p>{filtered.length} {filtered.length === 1 ? 'item' : 'items'} available</p>
-              </div>
-              <div className="listing-actions">
-                <div className="search">
-                  <Search size={16} />
-                  <input
-                    id="search-input"
-                    placeholder="Search gaming gadgets..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                  {search && (
-                    <button className="clear-search" onClick={() => setSearch('')}>
-                      <X size={13} />
-                    </button>
-                  )}
-                </div>
-                <button
-                  className="filter"
-                  onClick={() => {
-                    const nextSort =
-                      sort === 'featured'
-                        ? 'price'
-                        : sort === 'price'
-                        ? 'rating'
-                        : sort === 'rating'
-                        ? 'popular'
-                        : 'featured';
-                    setSort(nextSort);
-                  }}
-                >
-                  <SlidersHorizontal size={15} /> Sort: {sort.charAt(0).toUpperCase() + sort.slice(1)}
-                </button>
-                <select value={sort} onChange={(e) => setSort(e.target.value)}>
-                  <option value="featured">Sort: Featured</option>
-                  <option value="popular">Most popular</option>
-                  <option value="rating">Top rated</option>
-                  <option value="price">Price: low to high</option>
-                </select>
-              </div>
-            </div>
-
-            {filtered.length ? (
-              <div className="grid">
-                {filtered.map((p) => (
-                  <ProductCard
-                    p={p}
-                    onAdd={addToCart}
-                    onQuickView={setQuickProduct}
-                    key={p.id}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="no-results">
-                <Search size={36} />
-                <h3>No products found</h3>
-                <p>Try searching for a different game or select another category tab above.</p>
-                <button
-                  className="primary"
-                  style={{ marginTop: '14px' }}
-                  onClick={() => {
-                    setSearch('');
-                    setSubTab('All');
-                  }}
-                >
-                  Reset Filters
-                </button>
-              </div>
-            )}
-          </section>
+        {activeNav === 'buy' ? (
+          <BuySection onSwitchToRent={() => setActiveNav('rent')} />
+        ) : activeNav === 'earn' ? (
+          <EarnSection onSwitchToRent={() => setActiveNav('rent')} />
         ) : (
-          <section className="listing other-cat-listing">
-            <div className="category-showcase-box">
-              <div className="showcase-icon">{currentCatMeta.badgeIcon}</div>
-              <h2>{mainCategory} Rentals in {selectedCity}</h2>
-              <p>
-                You are viewing the <strong>{mainCategory}</strong> department. The current product dataset provided for this assignment contains the complete <strong>Bangalore Gaming Gadgets Catalog</strong>.
-              </p>
-              <div className="cat-feature-pills">
-                {currentCatMeta.tabs.map((t) => (
-                  <span key={t} className="feature-pill">{t}</span>
-                ))}
+          <>
+            <DateBar
+              onOpenModal={() => setDatesModalOpen(true)}
+              selectedDates={{ start: startDate, end: endDate }}
+            />
+
+            {/* Dynamic Hero Section according to selected category */}
+            <section className="hero">
+              <div className="hero-content">
+                <span className="hero-eyebrow">{currentCatMeta.eyebrow}</span>
+                <h1>{currentCatMeta.title} in {selectedCity}</h1>
+                <p>{currentCatMeta.description}</p>
+                <div className="hero-highlights">
+                  {currentCatMeta.highlights.map((h) => (
+                    <span key={h} className="pill">
+                      <Sparkles size={13} /> {h}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div className="cat-cta-group">
-                <button
-                  className="primary btn-large"
-                  onClick={() => switchMainCategory('Gaming')}
-                >
-                  View Gaming Gadgets Catalog <ArrowRight size={16} />
-                </button>
+              <div className="hero-badge">
+                <div>{currentCatMeta.badgeIcon}</div>
+                <b>{currentCatMeta.badgeText}</b>
+                <span>{currentCatMeta.badgeSub}</span>
               </div>
-            </div>
-          </section>
+            </section>
+
+            {/* Subcategory Filter Tabs */}
+            <CategoryTabs
+              tabsList={currentCatMeta.tabs}
+              active={subTab}
+              setActive={setSubTab}
+            />
+
+            {/* Catalog Section */}
+            {mainCategory === 'Gaming' ? (
+              <section className="listing">
+                <div className="listing-head">
+                  <div>
+                    <span className="eyebrow">{selectedCity.toUpperCase()} GAMING CATALOG</span>
+                    <h2>Gaming gadgets on rent</h2>
+                    <p>{filtered.length} {filtered.length === 1 ? 'item' : 'items'} available</p>
+                  </div>
+                  <div className="listing-actions">
+                    <div className="search">
+                      <Search size={16} />
+                      <input
+                        id="search-input"
+                        placeholder="Search gaming gadgets..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                      {search && (
+                        <button className="clear-search" onClick={() => setSearch('')}>
+                          <X size={13} />
+                        </button>
+                      )}
+                    </div>
+                    <button
+                      className="filter"
+                      onClick={() => {
+                        const nextSort =
+                          sort === 'featured'
+                            ? 'price'
+                            : sort === 'price'
+                            ? 'rating'
+                            : sort === 'rating'
+                            ? 'popular'
+                            : 'featured';
+                        setSort(nextSort);
+                      }}
+                    >
+                      <SlidersHorizontal size={15} /> Sort: {sort.charAt(0).toUpperCase() + sort.slice(1)}
+                    </button>
+                    <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                      <option value="featured">Sort: Featured</option>
+                      <option value="popular">Most popular</option>
+                      <option value="rating">Top rated</option>
+                      <option value="price">Price: low to high</option>
+                    </select>
+                  </div>
+                </div>
+
+                {filtered.length ? (
+                  <div className="grid">
+                    {filtered.map((p) => (
+                      <ProductCard
+                        p={p}
+                        onAdd={addToCart}
+                        onQuickView={setQuickProduct}
+                        key={p.id}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="no-results">
+                    <Search size={36} />
+                    <h3>No products found</h3>
+                    <p>Try searching for a different game or select another category tab above.</p>
+                    <button
+                      className="primary"
+                      style={{ marginTop: '14px' }}
+                      onClick={() => {
+                        setSearch('');
+                        setSubTab('All');
+                      }}
+                    >
+                      Reset Filters
+                    </button>
+                  </div>
+                )}
+              </section>
+            ) : (
+              <section className="listing other-cat-listing">
+                <div className="category-showcase-box">
+                  <div className="showcase-icon">{currentCatMeta.badgeIcon}</div>
+                  <h2>{mainCategory} Rentals in {selectedCity}</h2>
+                  <p>
+                    You are viewing the <strong>{mainCategory}</strong> department. The current product dataset provided for this assignment contains the complete <strong>Bangalore Gaming Gadgets Catalog</strong>.
+                  </p>
+                  <div className="cat-feature-pills">
+                    {currentCatMeta.tabs.map((t) => (
+                      <span key={t} className="feature-pill">{t}</span>
+                    ))}
+                  </div>
+                  <div className="cat-cta-group">
+                    <button
+                      className="primary btn-large"
+                      onClick={() => switchMainCategory('Gaming')}
+                    >
+                      View Gaming Gadgets Catalog <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              </section>
+            )}
+          </>
         )}
 
         <Trust />
@@ -980,7 +1201,7 @@ function App() {
         <Testimonials />
       </main>
 
-      <Footer onSelectCategory={switchMainCategory} />
+      <Footer onSelectCategory={switchMainCategory} onSelectNav={setActiveNav} />
 
       {cartOpen && (
         <Cart
